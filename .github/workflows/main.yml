@@ -76,7 +76,7 @@ jobs:
                 --availability-domain "$ad" \
                 --compartment-id "${OCI_TENANCY}" \
                 --shape "VM.Standard.A1.Flex" \
-                --shape-config '{"ocpus":4,"memoryInGBs":24}' \
+                --shape-config '{"ocpus":2,"memoryInGBs":12}' \
                 --image-id "$IMAGE_ID" \
                 --subnet-id "${SUBNET_ID}" \
                 --ssh-authorized-keys-file ~/.ssh/id_rsa_oracle.pub \
@@ -85,7 +85,13 @@ jobs:
                 --wait-for-state RUNNING --max-wait-seconds 1 \
                 >/dev/null 2>/dev/null; then
                 
-                echo "[SUCCESS] ARM 4C24G instance created in $ad"
+                echo "[SUCCESS] ARM 2C12G instance created in $ad"
+                curl -fsS -X POST \
+                  -H "Authorization: Bearer ${{ secrets.FENGXIN_KEY }}" \
+                  -H "Title: build ${{ github.run_number }}" \
+                  -H "Tags: github_check_mark" \
+                  https://push.luoml.kdns.fr/ci \
+                  -d "${{ github.repository }}@${{ github.sha }} [SUCCESS] ARM 2C12G instance created in $ad"
                 exit 0
               else
                 echo "$ad: No stock"
