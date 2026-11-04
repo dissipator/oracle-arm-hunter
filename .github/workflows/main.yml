@@ -89,12 +89,18 @@ jobs:
                 curl -fsS -X POST \
                   -H "Authorization: Bearer ${{ secrets.FENGXIN_KEY }}" \
                   -H "Title: build ${{ github.run_number }}" \
-                  -H "Tags: github_check_mark" \
+                  -H "Tags: info" \
                   https://push.luoml.kdns.fr/ci \
                   -d "${{ github.repository }}@${{ github.sha }} [SUCCESS] ARM 2C12G instance created in $ad"
                 exit 0
               else
                 echo "$ad: No stock"
+                curl -fsS -X POST \
+                  -H "Authorization: Bearer ${{ secrets.FENGXIN_KEY }}" \
+                  -H "Title: build ${{ github.run_number }}" \
+                  -H "Tags: info" \
+                  https://push.luoml.kdns.fr/ci \
+                  -d "${{ github.repository }}@${{ github.sha }} $ad：No stock"
               fi
               
               sleep 5
